@@ -137,14 +137,8 @@ I love you forever!!
     </div>
 </div>
 
-<audio id="music" src="music.mp3" loop></audio>
 
 <script>
-
-const audio = document.getElementById('music');
-audio.volume = 0.3; // Sets volume to 50% (Range: 0.0 - 1.0)
-
-
 const noBtn = document.getElementById("noBtn");
 const yesBtn = document.getElementById("yesBtn");
 const finalMessage = document.getElementById("finalMessage");
@@ -178,10 +172,13 @@ yesBtn.addEventListener("click", () => {
     started = true;
 
     buttonsBox.style.display = "none";
+    finalMessage.style.display = "flex";
 
-    finalMessage.style.display = "flex";  /* ✅ SHOW AFTER CLICK */
-
+    const music = new Audio('music.mp3');
+    music.loop = true;
+    music.volume = 0.3;
     music.play().catch(()=>{});
+
     startHearts();
 });
 
