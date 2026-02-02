@@ -9,103 +9,105 @@ body {
     margin: 0;
     padding: 0;
     height: 100vh;
-    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    background: linear-gradient(135deg, #ffafbd, #ffc3a0, #ffdde1);
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: Arial, sans-serif;
-    overflow: hidden;
+    font-family: "Segoe UI", "Arial", sans-serif;
 }
 
 /* CARD */
 .card {
     background: white;
-    padding: 90px 120px;
-    border-radius: 20px;
+    padding: 70px 90px;
+    border-radius: 25px;
     text-align: center;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    box-shadow: 0 15px 35px rgba(255, 77, 109, 0.25);
     position: relative;
-    z-index: 2;
 }
 
 /* TITLE */
 h1 {
-    color: #ff4d6d;
-    margin-bottom: 100px;
+    color: #ff2e63;
+    margin-bottom: 60px;
+    font-size: 26px;
+    letter-spacing: 0.5px;
 }
 
-/* BUTTONS AREA */
+/* BUTTONS */
 .buttons {
     position: relative;
     height: 100px;
 }
 
-/* BUTTONS */
 button {
     border: none;
-    border-radius: 30px;
+    border-radius: 40px;
     cursor: pointer;
-    transition: 0.2s;
+    transition: all 0.25s ease;
     position: absolute;
+    font-weight: bold;
 }
 
 /* YES BUTTON */
 #yesBtn {
-    background-color: #ff4d6d;
+    background: linear-gradient(45deg, #ff4d6d, #ff758f);
     color: white;
-    padding: 16px 38px;
+    padding: 16px 40px;
     font-size: 20px;
     left: 20px;
+    box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
+}
+
+#yesBtn:hover {
+    transform: scale(1.08);
 }
 
 /* NO BUTTON */
 #noBtn {
-    background-color: #cccccc;
-    color: #333;
-    padding: 16px 38px;
+    background-color: #f1f1f1;
+    color: #444;
+    padding: 16px 40px;
     font-size: 20px;
     right: 20px;
 }
 
-/* FINAL MESSAGE (HIDDEN INITIALLY) */
+/* FINAL MESSAGE */
 #finalMessage {
-    display: none;              /* 🔴 IMPORTANT */
-    margin-top: 25px;
-    width: 100%;
-    max-width: 550px;
+    display: none;
+    margin-top: 20px;
+    max-width: 560px;
     flex-direction: column;
     align-items: center;
 }
 
-/* GIF */
 .gif-box {
     width: 100%;
     max-width: 300px;
     height: 220px;
-    border-radius: 15px;
+    border-radius: 20px;
     background-image: url("200.gif");
     background-size: cover;
     background-position: center;
     margin-bottom: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }
 
-/* MESSAGE TEXT */
 .message-text {
-    font-size: 20px;
-    color: #ff4d6d;
+    font-size: 18px;
+    color: #ff2e63;
     font-weight: bold;
     white-space: pre-line;
-    text-align: center;
+    line-height: 1.5;
 }
 
-/* FALLING HEARTS */
+/* HEARTS */
 .heart {
     position: fixed;
     top: -10px;
     font-size: 24px;
     animation: fall linear forwards;
     pointer-events: none;
-    z-index: 1;
 }
 
 @keyframes fall {
@@ -120,27 +122,31 @@ button {
 <body>
 
 <div class="card">
-    <h1>Mane, will you be my Valentine?❤️</h1>
+
+    <!-- AUDIO -->
+    <audio id="bgMusic" src="music.mp3"></audio>
+
+    <h1>💌 Mane, will you be my Valentine? 💌</h1>
 
     <div class="buttons">
-        <button id="yesBtn">YES</button>
-        <button id="noBtn">NO</button>
+        <button id="yesBtn">YES 💖</button>
+        <button id="noBtn">NO 🙈</button>
     </div>
 
     <div id="finalMessage">
         <div class="gif-box"></div>
+
         <div class="message-text">
-Mane, you are my sunshine🌞, my brightest smile😁, and the rhythm of my heart❤️.  
+Mane, you are my sunshine 🌞, my brightest smile 😁, and the rhythm of my heart ❤️.  
 I love you more than words can say, forever and always!!!
 
-Tonight, I would be honored if you join me for a special dinner at "LUCA YEREVAN"🍷🍽️ — just you and me, under the evening lights🌠.  
+Tonight, I would be honored if you join me for a special dinner at "LUCA YEREVAN" 🍷🍽️ — just you and me, under the evening lights 🌠.  
 — Artur  
 
-P.S. Sorry for the music😂
+P.S. Sorry for the music 😂
         </div>
     </div>
 </div>
-
 
 <script>
 const noBtn = document.getElementById("noBtn");
@@ -148,22 +154,35 @@ const yesBtn = document.getElementById("yesBtn");
 const finalMessage = document.getElementById("finalMessage");
 const buttonsBox = document.querySelector(".buttons");
 const card = document.querySelector(".card");
-const music = document.getElementById("music");
-
+const music = document.getElementById("bgMusic");
 
 let started = false;
 
-/* NO BUTTON ESCAPES */
-noBtn.addEventListener("mouseenter", moveButton);
-noBtn.addEventListener("click", moveButton);
+/* NO BUTTON TEXTS — translated to English */
+const noMessages = [
+    "Are you sure? 😢",
+    "Think again 🥺",
+    "I’ll buy you dessert 🍰",
+    "Just say yes 💖",
+    "You will break my heart 💔",
+    "Last chance 😭",
+    "I will be a good boy 😌",
+];
 
-function moveButton() {
+let noIndex = 0;
+
+noBtn.addEventListener("click", changeAndEscape);
+
+function changeAndEscape() {
+
+    noBtn.textContent = noMessages[noIndex];
+    noIndex = (noIndex + 1) % noMessages.length;
+
     const cardRect = card.getBoundingClientRect();
     const btnRect = noBtn.getBoundingClientRect();
-    const padding = 20;
 
-    const maxX = cardRect.width - btnRect.width - padding;
-    const maxY = cardRect.height - btnRect.height - padding;
+    const maxX = cardRect.width - btnRect.width - 30;
+    const maxY = cardRect.height - btnRect.height - 30;
 
     noBtn.style.left = Math.random() * maxX + "px";
     noBtn.style.top  = Math.random() * maxY + "px";
@@ -172,15 +191,16 @@ function moveButton() {
 
 /* YES CLICK */
 yesBtn.addEventListener("click", () => {
+
     if (started) return;
     started = true;
 
     buttonsBox.style.display = "none";
     finalMessage.style.display = "flex";
 
-    const music = new Audio('music.mp3');
-    music.loop = true;
-    music.volume = 0.3;
+    // start music (mobile safe – inside click)
+    music.volume = 0.35;
+    music.currentTime = 0;
     music.play().catch(()=>{});
 
     startHearts();
@@ -188,16 +208,23 @@ yesBtn.addEventListener("click", () => {
 
 /* HEARTS */
 function startHearts() {
+
     setInterval(() => {
+
         const heart = document.createElement("div");
         heart.className = "heart";
-        heart.textContent = "❤️";
+        heart.textContent = "💖";
+
         heart.style.left = Math.random() * 100 + "vw";
-        heart.style.fontSize = (16 + Math.random() * 20) + "px";
-        heart.style.animationDuration = (4 + Math.random() * 3) + "s";
+        heart.style.fontSize = (16 + Math.random() * 18) + "px";
+        heart.style.animationDuration =
+            (4 + Math.random() * 3) + "s";
+
         document.body.appendChild(heart);
+
         setTimeout(() => heart.remove(), 7000);
-    }, 250);
+
+    }, 220);
 }
 </script>
 
